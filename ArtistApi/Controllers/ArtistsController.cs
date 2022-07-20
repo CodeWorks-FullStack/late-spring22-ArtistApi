@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ArtistApi.Models;
 using ArtistApi.Services;
+using CodeWorks.Auth0Provider;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArtistApi.Controllers
@@ -52,12 +55,16 @@ namespace ArtistApi.Controllers
 
     // Create
     [HttpPost]
-    public ActionResult<Artist> Create([FromBody] Artist artistData)
+    [Authorize]
+    public async Task<ActionResult<Artist>> Create([FromBody] Artist artistData)
     {
       try
       {
-        // TODO add creatorId
+        // NOTE req.userInfo
+        Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+        artistData.CreatorId = userInfo.Id;
         Artist newArtist = _artServ.Create(artistData);
+        newArtist.Creator = userInfo;
         return Ok(newArtist);
 
       }
@@ -69,14 +76,17 @@ namespace ArtistApi.Controllers
 
     // Edit
     [HttpPut("{id}")]
-    public ActionResult<Artist> Edit(int id, [FromBody] Artist artistData)
+    [Authorize]
+    public async Task<ActionResult<Artist>> EditAsync(int id, [FromBody] Artist artistData)
     {
       try
       {
         // TODO add creatorID
+        Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
         artistData.Id = id;
+        artistData.CreatorId = userInfo.Id;
         Artist update = _artServ.Edit(artistData);
-        return Ok();
+        return Ok(update);
       }
       catch (Exception e)
       {
@@ -86,12 +96,14 @@ namespace ArtistApi.Controllers
 
     // Delete
     [HttpDelete("{id}")]
-    public ActionResult<Artist> Delete(string id)
+    [Authorize]
+    public async Task<ActionResult<Artist>> DeleteAsync(int id)
     {
       try
       {
         // TODO add creatorID
-        Artist deletedArtist = _artServ.Delete(id);
+        Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+        Artist deletedArtist = _artServ.Delete(id, userInfo.Id);
         return Ok(deletedArtist);
       }
       catch (Exception e)

@@ -32,17 +32,37 @@ namespace ArtistApi.Services
 
     internal Artist Create(Artist artistData)
     {
-      throw new NotImplementedException();
+      return _repo.Create(artistData);
     }
 
     internal Artist Edit(Artist artistData)
     {
-      throw new NotImplementedException();
+      Artist original = Get(artistData.Id);
+      //   if (artistData.CreatorId != original.CreatorId)
+      //   {
+      //     throw new Exception("You cannot edit that")
+      //   }
+      original.Name = artistData.Name ?? original.Name;
+      original.DateOfBirth = artistData.DateOfBirth ?? original.DateOfBirth;
+      original.IsAlive = artistData.IsAlive ?? original.IsAlive;
+
+      // save changes
+      _repo.Edit(original);
+
+      return original;
     }
 
-    internal Artist Delete(string id)
+    internal Artist Delete(int id, string userId)
     {
-      throw new NotImplementedException();
+      Artist original = Get(id);
+      //   if (userId != original.CreatorId)
+      //   {
+      //     throw new Exception("You cannot edit that")
+      //   }
+
+      _repo.Delete(id);
+
+      return original;
     }
   }
 }
