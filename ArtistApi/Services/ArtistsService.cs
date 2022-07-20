@@ -1,19 +1,33 @@
 using System;
 using System.Collections.Generic;
 using ArtistApi.Models;
+using ArtistApi.Repositories;
 
 namespace ArtistApi.Services
 {
   public class ArtistsService
   {
-    internal List<Artist> Get()
+    private readonly ArtistsRepository _repo;
+
+    public ArtistsService(ArtistsRepository repo)
     {
-      throw new NotImplementedException();
+      _repo = repo;
     }
 
-    internal Artist Get(string id)
+    internal List<Artist> Get()
     {
-      throw new NotImplementedException();
+      return _repo.Get();
+    }
+
+    internal Artist Get(int id)
+    {
+      // get it....
+      Artist found = _repo.Get(id);
+      if (found == null)
+      {
+        throw new Exception("Invalid Id");
+      }
+      return found;
     }
 
     internal Artist Create(Artist artistData)

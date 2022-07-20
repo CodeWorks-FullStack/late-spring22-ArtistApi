@@ -36,6 +36,7 @@ namespace ArtistApi
       services.AddScoped<AccountsRepository>();
       services.AddScoped<AccountService>();
 
+      services.AddTransient<ArtistsRepository>();
       services.AddTransient<ArtistsService>();
     }
 

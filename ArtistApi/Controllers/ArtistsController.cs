@@ -36,7 +36,7 @@ namespace ArtistApi.Controllers
 
     // GetById
     [HttpGet("{id}")]
-    public ActionResult<Artist> Get(string id)
+    public ActionResult<Artist> Get(int id)
     {
       try
       {
@@ -69,7 +69,7 @@ namespace ArtistApi.Controllers
 
     // Edit
     [HttpPut("{id}")]
-    public ActionResult<Artist> Edit(string id, [FromBody] Artist artistData)
+    public ActionResult<Artist> Edit(int id, [FromBody] Artist artistData)
     {
       try
       {
